@@ -78,7 +78,7 @@ st.pyplot(fig)
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.metrics import r2_score
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.svm import SVR
 
@@ -88,18 +88,25 @@ y = df["Favourites"]
 x_train, x_test, y_train, y_test = train_test_split(
     x, y, random_state=42, test_size=0.2
 )
+# linear
 lin_reg = LinearRegression()
 lin_reg.fit(x_train, y_train)
 pred_lr = lin_reg.predict(x_test)
 r2_lr = r2_score(y_test, pred_lr)
+
+# knn
 knn_reg = KNeighborsRegressor()
 knn_reg.fit(x_train, y_train)
 pred_knn = knn_reg.predict(x_test)
 r2_knn = r2_score(y_test, pred_knn)
+
+# svr
 svr = SVR(kernel="rbf")
 svr.fit(x_train, y_train)
 pred_svr = svr.predict(x_test)
 r2_svr = r2_score(y_test, pred_svr)
+
+# best model
 scores = {"Linear": r2_lr, "KNN": r2_knn, "SVR": r2_svr}
 models = max(scores, key=scores.get)
 if models == "Linear":
@@ -120,10 +127,14 @@ st.dataframe(results)
 st.bar_chart(results.set_index("Model"))
 
 # input
-st.header("Make prediction")
+import joblib
+
+joblib.dump(best_model, "Regression_app.joblib")
+model = joblib.load("Regression_app.joblib")
+st.header("prediction app")
 user_input = st.number_input(
     "Enter number of Active players to predict favourtie:", min_value=1
 )
 if st.button("Predict"):
-    pred = best_model.predict([[user_input]])
+    pred = model.predict([[user_input]])
     st.success(f"predicted favourties:{pred[0]:.0f}")
