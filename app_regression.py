@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import seaborn as sns
 
 st.title("Roblox visits -Regression")
 df = pd.read_csv("roblox_games.csv", sep=",")
@@ -73,6 +74,13 @@ ax.set_xscale("log")
 ax.set_yscale("log")
 st.pyplot(fig)
 
+# heatmap
+if "Visits" in df.columns and "Rating" in df.columns:
+    st.subheader("Heatmap: Visits vs Rating")
+    fig, ax = plt.subplots(figsize=(6, 4))
+    sns.heatmap(df[["Visits", "Rating"]].corr(), annot=True, cmap="coolwarm", ax=ax)
+    st.pyplot(fig)
+
 # print(df.describe())
 
 import numpy as np
@@ -132,9 +140,8 @@ import joblib
 joblib.dump(best_model, "Regression_app.joblib")
 model = joblib.load("Regression_app.joblib")
 st.header("prediction app")
-user_input = st.number_input(
-    "Enter number of Active players to predict favourtie:", min_value=1
-)
+game_name = st.text_input("Enter game name")
+active_players = st.number_input("Enter number of active players", min_value=1)
 if st.button("Predict"):
-    pred = model.predict([[user_input]])
-    st.success(f"predicted favourties:{pred[0]:.0f}")
+    pred = model.predict([[active_players]])
+    st.success(f"predicted favourties of {game_name}: {pred[0]:.0f}")
