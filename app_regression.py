@@ -37,11 +37,12 @@ model_info = joblib.load("model_info.joblib")
 # top 10 games bar chart
 st.subheader("Top 10 Games:Likes and Dislikes")
 top_10 = model_info["top_10_games"]
+names = list(top_10["Name"].values())
+likes = list(top_10["Likes"].values())
+dislikes = list(top_10["Dislikes"].values())
 fig, ax = plt.subplots(figsize=(8, 5))
-
-# Bar chart: likes and dislikes
-ax.bar(top_10["Name"], top_10["Likes"], label="Likes")
-ax.bar(top_10["Name"], top_10["Dislikes"], bottom=top_10["Likes"], label="Dislikes")
+ax.bar(names, likes, label="Likes")
+ax.bar(names, dislikes, bottom=likes, label="Dislikes")
 plt.xticks(rotation=90)
 ax.ticklabel_format(style="plain", axis="y")
 ax.set_ylabel("Counts")
