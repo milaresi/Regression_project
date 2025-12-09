@@ -80,9 +80,6 @@ st.subheader("Correlation Heatmap")
 fig, ax = plt.subplots(figsize=(8, 6))
 sns.heatmap(df.corr(numeric_only=True), annot=True, cmap="coolwarm", ax=ax)
 st.pyplot(fig)
-import joblib
-import pandas as pd
-import streamlit as st
 
 # load the saved info
 model_info = joblib.load("model_info.joblib")
@@ -107,7 +104,6 @@ visits = st.number_input("Visits", min_value=0)
 likes = st.number_input("Likes", min_value=0)
 dislikes = st.number_input("Dislikes", min_value=0)
 rating = st.number_input("Rating (0–100)", min_value=0, max_value=100)
-
 
 if st.button("Predict"):
     pred = model.predict([[active, visits, likes, dislikes, rating]])

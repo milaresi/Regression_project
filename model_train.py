@@ -51,4 +51,4 @@ model_info = {
     "numeric_data": df[num_cols].describe().to_dict(),
 }
 joblib.dump(model_info, "model_info.joblib")
-print(f"Training done!")
+print(f"Training complete!")
