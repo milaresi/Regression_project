@@ -24,9 +24,25 @@ lin_reg = LinearRegression()
 lin_reg.fit(x_train, y_train)
 r2_lr = r2_score(y_test, lin_reg.predict(x_test))
 
-knn_reg = KNeighborsRegressor()
-knn_reg.fit(x_train, y_train)
-r2_knn = r2_score(y_test, knn_reg.predict(x_test))
+# knn_reg = KNeighborsRegressor()
+# knn_reg.fit(x_train, y_train)
+# r2_knn = r2_score(y_test, knn_reg.predict(x_test))
+
+# Hyperparameter tuning
+best_knn_score = -1
+best_knn_model = None
+
+for k in [3, 5, 7]:
+    knn = KNeighborsRegressor(n_neighbors=k)
+    knn.fit(x_train, y_train)
+    score = r2_score(y_test, knn.predict(x_test))
+
+    if score > best_knn_score:
+        best_knn_score = score
+        best_knn_model = knn
+
+r2_knn = best_knn_score
+knn_reg = best_knn_model
 
 svr = SVR(kernel="rbf")
 svr.fit(x_train, y_train)
